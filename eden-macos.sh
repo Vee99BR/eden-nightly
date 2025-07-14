@@ -37,7 +37,7 @@ cmake .. -GNinja \
     -DCMAKE_C_COMPILER_LAUNCHER=ccache \
     -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
     -DYUZU_USE_PRECOMPILED_HEADERS=OFF 
-ninja
+ninja -j $(nproc)
 ccache -s -v
 
 # Bundle and code-sign eden.app. Excute twice to resolve the qt framework missing error, thanks to @hauntek!

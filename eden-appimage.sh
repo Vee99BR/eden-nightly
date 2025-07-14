@@ -92,7 +92,7 @@ cmake .. -GNinja \
     ${YUZU_USE_PRECOMPILED_HEADERS:+-DYUZU_USE_PRECOMPILED_HEADERS=$YUZU_USE_PRECOMPILED_HEADERS} \
     ${CMAKE_CXX_FLAGS:+-DCMAKE_CXX_FLAGS="$CMAKE_CXX_FLAGS"} \
     ${CMAKE_C_FLAGS:+-DCMAKE_C_FLAGS="$CMAKE_C_FLAGS"}
-ninja
+ninja -j $(nproc)
 
 if [ "$1" != 'aarch64' ]; then
     ccache -s -v
