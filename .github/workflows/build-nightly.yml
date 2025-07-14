@@ -261,7 +261,7 @@ jobs:
           host: 'windows'
           target: 'desktop'
           arch: ${{ matrix.qt_arch }}
-          modules: qtmultimedia
+          modules: qtmultimedia qt5compat
           
       - name: Install vulkan-sdk
         shell: bash
