@@ -174,7 +174,7 @@ jobs:
         
       - name: Pull Eden with submodules
         run: |
-          if ! git clone 'https://git.eden-emu.dev/eden-emu/eden.git' ./eden; then
+          if ! git clone 'https://github.com/Vee99BR/eden-mirror.git' ./eden; then
             echo "Using mirror instead..."
             rm -rf ./eden || true
             git clone 'https://github.com/pflyly/eden-mirror.git' ./eden
@@ -279,7 +279,7 @@ jobs:
       - name: Pull Eden with submodules
         shell: bash
         run: |
-          if ! git clone 'https://git.eden-emu.dev/eden-emu/eden.git' ./eden; then
+          if ! git clone 'https://github.com/Vee99BR/eden-mirror.git' ./eden; then
             echo "Using mirror instead..."
             rm -rf ./eden || true
             git clone 'https://github.com/pflyly/eden-mirror.git' ./eden
@@ -425,7 +425,7 @@ jobs:
 
       - name: Pull Eden with submodules
         run: |
-          if ! git clone 'https://git.eden-emu.dev/eden-emu/eden.git' ./eden; then
+          if ! git clone 'https://github.com/Vee99BR/eden-mirror.git' ./eden; then
             echo "Using mirror instead..."
             rm -rf ./eden || true
             git clone 'https://github.com/pflyly/eden-mirror.git' ./eden
