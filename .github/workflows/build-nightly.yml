@@ -134,14 +134,14 @@ jobs:
           path: light
 
       - name: Save ccache for ${{ matrix.target }}
-        if: ${{ matrix.target != 'aarch64' && github.ref_name == 'main' }}
+        if: ${{ always() && matrix.target != 'aarch64' && github.ref_name == 'main' }}
         uses: actions/cache/save@v4
         with:
           path: ${{ env.CCACHE_DIR }}
           key: ${{ steps.restore-ccache-nonaarch64.outputs.cache-primary-key }}
 
       - name: Save sccache for ${{ matrix.target }}
-        if: ${{ matrix.target == 'aarch64' && github.ref_name == 'main' }}
+        if: ${{ always() && matrix.target == 'aarch64' && github.ref_name == 'main' }}
         uses: actions/cache/save@v4
         with:
           path: ~/.cache/sccache/
@@ -214,7 +214,7 @@ jobs:
          path: eden/src/android/artifacts/
 
       - name: Save gradle cache for ${{ matrix.target }}
-        if: ${{ github.ref_name == 'main' }}
+        if: ${{ always() && github.ref_name == 'main' }}
         uses: actions/cache/save@v4
         with:
           path: |
@@ -223,7 +223,7 @@ jobs:
           key: ${{ steps.restore-gradle-cache.outputs.cache-primary-key }}
 
       - name: Save sccache for ${{ matrix.target }}
-        if: ${{ github.ref_name == 'main' }}
+        if: ${{ always() && github.ref_name == 'main' }}
         uses: actions/cache/save@v4
         with:
           path: ~/.cache/sccache/
@@ -319,7 +319,7 @@ jobs:
           path: eden/build/artifacts/
 
       - name: Save vcpkg cache for ${{ matrix.target }}
-        if: ${{ github.ref_name == 'main' }}
+        if: ${{ always() && github.ref_name == 'main' }}
         uses: actions/cache/save@v4
         with:
           path: |
@@ -329,7 +329,7 @@ jobs:
           key: ${{ steps.restore-vcpkg-cache.outputs.cache-primary-key }}
           
       - name: Save sccache for ${{ matrix.target }}
-        if: ${{ github.ref_name == 'main' }}
+        if: ${{ always() && github.ref_name == 'main' }}
         uses: actions/cache/save@v4
         with:
           path: ${{ env.SCCACHE_DIR }}
@@ -379,7 +379,7 @@ jobs:
           path: eden/build/artifacts/
 
       - name: Save ccache for ${{ matrix.target }}
-        if: ${{ github.ref_name == 'main' }}
+        if: ${{ always() && github.ref_name == 'main' }}
         uses: actions/cache/save@v4
         with:
           path: ${{ env.CCACHE_DIR }}
@@ -432,7 +432,7 @@ jobs:
           path: eden/build/artifacts/
 
       - name: Save ccache
-        if: ${{ github.ref_name == 'main' }}
+        if: ${{ always() && github.ref_name == 'main' }}
         uses: actions/cache/save@v4
         with:
           path: ${{ env.CCACHE_DIR }}
