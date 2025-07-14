@@ -91,7 +91,7 @@ jobs:
         id: restore-ccache-nonaarch64
         with:
           path: ${{ env.CCACHE_DIR }}
-          key: ${{ runner.os }}-ccache-${{ matrix.target }}-${{ github.sha }}
+          key: ${{ runner.os }}-ccache-${{ matrix.target }}-v1
           restore-keys: |
             ${{ runner.os }}-ccache-${{ matrix.target }}-
 
@@ -101,7 +101,7 @@ jobs:
         id: restore-sccache-aarch64
         with:
           path: ~/.cache/sccache/
-          key: ${{ runner.os }}-sccache-${{ matrix.target }}-${{ github.sha }}
+          key: ${{ runner.os }}-sccache-${{ matrix.target }}-v1
           restore-keys: |
             ${{ runner.os }}-sccache-${{ matrix.target }}-
 
@@ -189,7 +189,7 @@ jobs:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ matrix.target }}-${{ github.sha }}
+          key: ${{ runner.os }}-gradle-${{ matrix.target }}-v1
           restore-keys: |
             ${{ runner.os }}-gradle-${{ matrix.target }}-
 
@@ -198,7 +198,7 @@ jobs:
         id: restore-sccache-cache
         with:
           path: ~/.cache/sccache/
-          key: ${{ runner.os }}-android-sccache-${{ matrix.target }}-${{ github.sha }}
+          key: ${{ runner.os }}-android-sccache-${{ matrix.target }}-v1
           restore-keys: |
             ${{ runner.os }}-android-sccache-${{ matrix.target }}-
 
@@ -294,7 +294,7 @@ jobs:
             ${{ github.workspace }}/eden/build/vcpkg_installed
             ${{ github.workspace }}/eden/build/externals
             ${{ github.workspace }}/eden/.vcpkg
-          key: ${{ runner.os }}-vcpkg-${{ matrix.target }}-${{ github.sha }}
+          key: ${{ runner.os }}-vcpkg-${{ matrix.target }}-v1
           restore-keys: |
             ${{ runner.os }}-vcpkg-${{ matrix.target }}-
 
@@ -303,7 +303,7 @@ jobs:
         id: restore-sccache-cache
         with:
           path: ${{ env.SCCACHE_DIR }}
-          key: ${{ runner.os }}-sccache-${{ matrix.target }}-${{ github.sha }}
+          key: ${{ runner.os }}-sccache-${{ matrix.target }}-v1
           restore-keys: |
             ${{ runner.os }}-sccache-${{ matrix.target }}-
 
@@ -360,7 +360,7 @@ jobs:
         id: restore-ccache-cache
         with:
           path: ${{ env.CCACHE_DIR }}
-          key: ${{ runner.os }}-${{ matrix.target }}-ccache-${{ github.sha }}
+          key: ${{ runner.os }}-${{ matrix.target }}-ccache-v1
           restore-keys: |
             ${{ runner.os }}-${{ matrix.target }}-ccache-
 
@@ -404,7 +404,7 @@ jobs:
         id: restore-ccache-cache
         with:
           path: ${{ env.CCACHE_DIR }}
-          key: FreeBSD-ccache-${{ github.sha }}
+          key: FreeBSD-ccache-v1
           restore-keys: FreeBSD-ccache-
 
       - name: Pull Eden with submodules
