@@ -26,7 +26,7 @@ cmake .. -GNinja \
     -DCMAKE_C_COMPILER_LAUNCHER=ccache \
     -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
     -DQt6_DIR=/usr/local/lib/cmake/Qt6
-ninja
+ninja -j $(nproc)
 ccache -s-v
 
 PKG_NAME="Eden-${COUNT}-FreeBSD-${ARCH}"

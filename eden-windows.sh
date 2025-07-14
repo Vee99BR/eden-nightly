@@ -60,7 +60,7 @@ cmake .. -G Ninja \
     -DYUZU_USE_PRECOMPILED_HEADERS=OFF \
     -DCMAKE_SYSTEM_PROCESSOR=${ARCH} \
     "${EXTRA_CMAKE_FLAGS[@]}"
-ninja
+ninja -j $(nproc)
 ccache -s -v
 
 # Use windeployqt to gather dependencies
