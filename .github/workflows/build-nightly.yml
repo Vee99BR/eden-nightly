@@ -7,7 +7,7 @@ on:
   workflow_dispatch: {}
 
 jobs:
-  info: 
+  info:
     runs-on: ubuntu-latest
     name: "Get info"
     strategy:
@@ -20,7 +20,7 @@ jobs:
 
       - name: Get the latest release tag
         env:
-          GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"      
+          GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         run: |
             api_url="https://api.github.com/repos/${{ github.repository }}"
             latest_release_info=$(curl -H "Authorization: token $GH_TOKEN" "$api_url/releases/latest")
@@ -28,24 +28,24 @@ jobs:
             echo "${last_release_tag}"
             old_hash="${last_release_tag##*-}"
             echo "OLD_HASH=$old_hash" >> "$GITHUB_ENV"
-       
+
       - name: Generate changelog
         run: |
           chmod +x ./changelog.sh
           ./changelog.sh
-          
+
       - name: Upload tag file
         uses: actions/upload-artifact@v4.6.2
         with:
           name: tag
           path: ~/tag
-          
+
       - name: Upload count file
         uses: actions/upload-artifact@v4.6.2
         with:
           name: count
           path: ~/count
-          
+
       - name: Upload changelog file
         uses: actions/upload-artifact@v4.6.2
         with:
@@ -57,8 +57,8 @@ jobs:
         with:
           name: source
           path: artifacts
-          
-  appimage: 
+
+  appimage:
     runs-on: ${{ matrix.runs-on }}
     strategy:
       matrix:
@@ -70,7 +70,7 @@ jobs:
           - target: common
             runs-on: ubuntu-latest
           - target: legacy
-            runs-on: ubuntu-latest            
+            runs-on: ubuntu-latest
           - target: aarch64
             runs-on: ubuntu-24.04-arm
     continue-on-error: true
@@ -86,7 +86,7 @@ jobs:
           persist-credentials: false
 
       - name: Restore ccache for ${{ matrix.target }}
-        if: ${{ matrix.target != 'aarch64' }}      
+        if: ${{ matrix.target != 'aarch64' }}
         uses: actions/cache/restore@v4
         id: restore-ccache-nonaarch64
         with:
@@ -94,9 +94,9 @@ jobs:
           key: ${{ runner.os }}-ccache-${{ matrix.target }}-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-ccache-${{ matrix.target }}-
-            
+
       - name: Restore sccache for ${{ matrix.target }}
-        if: ${{ matrix.target == 'aarch64' }}  
+        if: ${{ matrix.target == 'aarch64' }}
         uses: actions/cache/restore@v4
         id: restore-sccache-aarch64
         with:
@@ -104,12 +104,12 @@ jobs:
           key: ${{ runner.os }}-sccache-${{ matrix.target }}-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-sccache-${{ matrix.target }}-
-            
+
       - name: Install dependencies
         run: |
           chmod +x ./linux-dependencies.sh
           ./linux-dependencies.sh
-          
+
       - name: Compile Eden ${{ matrix.target }}
         run: |
           chmod +x ./eden-appimage.sh
@@ -120,7 +120,7 @@ jobs:
         with:
           name: eden-${{ matrix.target}}-mesa-appimage
           path: mesa
-          
+
       - name: Upload appbundle with mesa
         uses: actions/upload-artifact@v4.6.2
         with:
@@ -147,7 +147,7 @@ jobs:
           path: ~/.cache/sccache/
           key: ${{ steps.restore-sccache-aarch64.outputs.cache-primary-key }}
 
-  android: 
+  android:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -162,16 +162,16 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get install sccache glslang-tools libvulkan-dev -y
-          
+
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: 17
-          
+
       - name: Set up Android SDK
         uses: android-actions/setup-android@v2
-        
+
       - name: Pull Eden with submodules
         run: |
           if ! git clone 'https://github.com/Vee99BR/eden-mirror.git' ./eden; then
@@ -181,7 +181,7 @@ jobs:
           fi
           cd ./eden
           git submodule update --init --recursive
-          
+
       - name: Restore gradle cache for ${{ matrix.target }}
         uses: actions/cache/restore@v4
         id: restore-gradle-cache
@@ -201,7 +201,7 @@ jobs:
           key: ${{ runner.os }}-android-sccache-${{ matrix.target }}-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-android-sccache-${{ matrix.target }}-
-            
+
       - name: Compile Eden android
         run: |
           chmod +x ./eden-android.sh
@@ -248,12 +248,12 @@ jobs:
       SCCACHE_DIR: 'C:\Users\runneradmin\AppData\Local\Mozilla\sccache'
     steps:
       - uses: actions/checkout@v4.2.2
-          
+
       - name: Set up MSVC
         uses: ilammy/msvc-dev-cmd@v1
         with:
-          arch: ${{ matrix.target }}          
-        
+          arch: ${{ matrix.target }}
+
       - name: Install Qt
         uses: jurplel/install-qt-action@v4
         with:
@@ -263,7 +263,7 @@ jobs:
           arch: ${{ matrix.qt_arch }}
           modules: qtmultimedia qt5compat
           cache: true
-          
+
       - name: Install vulkan-sdk
         shell: bash
         run: |
@@ -274,7 +274,7 @@ jobs:
            D:/a/_temp/vulkan.exe --accept-licenses --default-answer --confirm-command install
            echo "VULKAN_SDK=C:/VulkanSDK/1.4.313.1" >> $GITHUB_ENV
            echo "PATH=C:/VulkanSDK/1.4.313.1/Bin:$PATH" >> $GITHUB_ENV
-           
+
       - name: Pull Eden with submodules
         shell: bash
         run: |
@@ -297,7 +297,7 @@ jobs:
           key: ${{ runner.os }}-vcpkg-${{ matrix.target }}-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-vcpkg-${{ matrix.target }}-
-            
+
       - name: Restore sccache for ${{ matrix.target }}
         uses: actions/cache/restore@v4
         id: restore-sccache-cache
@@ -306,13 +306,13 @@ jobs:
           key: ${{ runner.os }}-sccache-${{ matrix.target }}-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-sccache-${{ matrix.target }}-
-            
-      - name: Compile Eden Windows ${{ matrix.target }}    
+
+      - name: Compile Eden Windows ${{ matrix.target }}
         shell: bash
         run: |
           chmod +x ./eden-windows.sh
           ./eden-windows.sh
-          
+
       - name: Upload
         uses: actions/upload-artifact@v4.6.2
         with:
@@ -328,14 +328,14 @@ jobs:
             ${{ github.workspace }}/eden/build/externals
             ${{ github.workspace }}/eden/.vcpkg
           key: ${{ steps.restore-vcpkg-cache.outputs.cache-primary-key }}
-          
+
       - name: Save sccache for ${{ matrix.target }}
         if: ${{ always() && github.ref_name == 'main' }}
         uses: actions/cache/save@v4
         with:
           path: ${{ env.SCCACHE_DIR }}
           key: ${{ steps.restore-sccache-cache.outputs.cache-primary-key }}
-          
+
   macos:
     runs-on: ${{ matrix.runs-on }}
     name: "MacOS (${{ matrix.target }})"
@@ -354,7 +354,7 @@ jobs:
       CCACHE_SLOPPINESS: time_macros
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Restore ccache for ${{ matrix.target }}
         uses: actions/cache/restore@v4
         id: restore-ccache-cache
@@ -363,16 +363,16 @@ jobs:
           key: ${{ runner.os }}-${{ matrix.target }}-ccache-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-${{ matrix.target }}-ccache-
-            
+
       - name: Install dependencies
         run: |
           brew install --formula --quiet autoconf automake boost ccache cmake fmt glslang hidapi libiconv libtool nasm nlohmann-json qt@6 sdl2 speexdsp zlib Catch2 vulkan-loader
-        
+
       - name: Compile Eden MacOS (${{ matrix.target }})
         run: |
           chmod +x ./eden-macos.sh
           ./eden-macos.sh
-          
+
       - name: Upload
         uses: actions/upload-artifact@v4.6.2
         with:
@@ -387,7 +387,7 @@ jobs:
           key: ${{ steps.restore-ccache-cache.outputs.cache-primary-key }}
 
   freebsd:
-    name: FreeBSD 
+    name: FreeBSD
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -416,7 +416,7 @@ jobs:
           fi
           cd ./eden
           git submodule update --init --recursive $(awk '/path/ && !/vcpkg/ && !/libusb/ { print $3 }' .gitmodules)
-          
+
       - name: Compile Eden FreeBSD
         uses: vmactions/freebsd-vm@v1.2.1
         with:
@@ -425,7 +425,7 @@ jobs:
           run: |
             chmod +x ./freeBSD-dependencies.sh ./eden-freeBSD.sh
             ./freeBSD-dependencies.sh && ./eden-freeBSD.sh
-            
+
       - name: Upload
         uses: actions/upload-artifact@v4.6.2
         with:
@@ -438,7 +438,7 @@ jobs:
         with:
           path: ${{ env.CCACHE_DIR }}
           key: ${{ steps.restore-ccache-cache.outputs.cache-primary-key }}
-                    
+
   release:
     name: "release"
     if: ${{ github.ref_name == 'main' }}
@@ -448,119 +448,119 @@ jobs:
       security-events: write
       contents: write
     runs-on: ubuntu-latest
-    steps:    
+    steps:
       - uses: actions/download-artifact@v4.3.0
         with:
            name: eden-steamdeck-mesa-appimage
-           
+
       - uses: actions/download-artifact@v4.3.0
         with:
            name: eden-steamdeck-mesa-appbundle
-           
+
       - uses: actions/download-artifact@v4.3.0
         with:
            name: eden-steamdeck-light-appimage
-           
+
       - uses: actions/download-artifact@v4.3.0
         with:
            name: eden-rog-mesa-appimage
-           
+
       - uses: actions/download-artifact@v4.3.0
         with:
            name: eden-rog-mesa-appbundle
-           
+
       - uses: actions/download-artifact@v4.3.0
         with:
            name: eden-rog-light-appimage
-           
+
       - uses: actions/download-artifact@v4.3.0
         with:
            name: eden-common-mesa-appimage
-           
+
       - uses: actions/download-artifact@v4.3.0
         with:
            name: eden-common-mesa-appbundle
-           
+
       - uses: actions/download-artifact@v4.3.0
         with:
            name: eden-common-light-appimage
-           
+
       - uses: actions/download-artifact@v4.3.0
         with:
            name: eden-legacy-mesa-appimage
-           
+
       - uses: actions/download-artifact@v4.3.0
         with:
            name: eden-legacy-mesa-appbundle
-           
+
       - uses: actions/download-artifact@v4.3.0
         with:
            name: eden-legacy-light-appimage
-           
+
       - uses: actions/download-artifact@v4.3.0
         with:
            name: eden-aarch64-mesa-appimage
-           
+
       - uses: actions/download-artifact@v4.3.0
         with:
            name: eden-aarch64-mesa-appbundle
-           
+
       - uses: actions/download-artifact@v4.3.0
         with:
            name: eden-aarch64-light-appimage
-           
+
 #      - uses: actions/download-artifact@v4.3.0
 #        with:
 #           name: eden-android-Replace
-        
+
 #      - uses: actions/download-artifact@v4.3.0
 #        with:
 #           name: eden-android-Coexist
-        
+
       - uses: actions/download-artifact@v4.3.0
         with:
            name: eden-windows-msvc-x86_64
-        
+
       - uses: actions/download-artifact@v4.3.0
         with:
            name: eden-windows-msvc-x86_arm64
         continue-on-error: true
-        
+
       - uses: actions/download-artifact@v4.3.0
         with:
            name: eden-macos-x86_64
-        
+
       - uses: actions/download-artifact@v4.3.0
         with:
            name: eden-macos-arm64
-        
+
       - uses: actions/download-artifact@v4.3.0
         with:
            name: eden-freebsd
-        
+
       - uses: actions/download-artifact@v4.3.0
         with:
            name: tag
-           
+
       - uses: actions/download-artifact@v4.3.0
         with:
            name: count
-           
+
       - uses: actions/download-artifact@v4.3.0
         with:
            name: changelog
-           
+
       - uses: actions/download-artifact@v4.3.0
         with:
            name: source
-           
+
       - name: Generate changelog
         run: |
           echo "TAG=$(cat tag)" >> "${GITHUB_ENV}"
           echo "COUNT=$(cat count)" >> "${GITHUB_ENV}"
           echo "BODY<<EOF" >> "${GITHUB_ENV}"
           cat changelog >> "${GITHUB_ENV}"
-          echo "EOF" >> "${GITHUB_ENV}"    
+          echo "EOF" >> "${GITHUB_ENV}"
 
       - name: Release Eden
         uses: softprops/action-gh-release@v2.2.2
