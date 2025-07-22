@@ -25,7 +25,7 @@ echo "$COUNT" > ~/count
 CHANGELOG_FILE=~/changelog
 BASE_COMMIT_URL="https://git.eden-emu.dev/eden-emu/eden/commit"
 BASE_COMPARE_URL="https://git.eden-emu.dev/eden-emu/eden/compare"
-BASE_DOWNLOAD_URL="https://github.com/pflyly/eden-nightly/releases/download"
+BASE_DOWNLOAD_URL="https://github.com/Vee99BR/eden-nightly/releases/download"
 
 # Fallback if OLD_HASH is empty or null
 if [ -z "$OLD_HASH" ] || [ "$OLD_HASH" = "null" ]; then
