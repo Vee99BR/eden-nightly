@@ -32,6 +32,11 @@ if [ -z "$OLD_HASH" ] || [ "$OLD_HASH" = "null" ]; then
   echo "OLD_HASH is empty, falling back to current HASH"
   OLD_HASH="$HASH"
 fi
+# Ensure the commit exists in the current repository before using it
+if ! git cat-file -e "$OLD_HASH"^{commit}; then
+  echo "OLD_HASH $OLD_HASH not found in current repository, falling back to HEAD"
+  OLD_HASH="$HASH"
+fi
 START_COUNT=$(git rev-list --count "$OLD_HASH")
 i=$((START_COUNT + 1))
 
