@@ -59,6 +59,7 @@ jobs:
           path: artifacts
           
   appimage: 
+    if: false # Disabled!
     runs-on: ${{ matrix.runs-on }}
     strategy:
       matrix:
@@ -148,6 +149,7 @@ jobs:
           key: ${{ steps.restore-sccache-aarch64.outputs.cache-primary-key }}
 
   android: 
+    if: false # Disabled!
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -354,6 +356,7 @@ jobs:
           key: ${{ steps.restore-ccache-cache.outputs.cache-primary-key }}
           
   macos:
+    if: false # Disabled!
     runs-on: ${{ matrix.runs-on }}
     name: "MacOS (${{ matrix.target }})"
     strategy:
@@ -404,6 +407,7 @@ jobs:
           key: ${{ steps.restore-ccache-cache.outputs.cache-primary-key }}
 
   freebsd:
+    if: false # Disabled!
     name: FreeBSD 
     runs-on: ubuntu-latest
     strategy:
@@ -459,7 +463,7 @@ jobs:
   release:
     name: "release"
     if: ${{ github.ref_name == 'main' }}
-    needs: [info, appimage, windows, macos, freebsd]
+    needs: [info, windows]
     permissions:
       actions: read
       security-events: write
